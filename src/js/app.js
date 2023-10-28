@@ -1,20 +1,16 @@
 import getRandomId from "../js/getRandomId";
-import updateLocalStorage from "../js/updateLocalStorage";
-import restoreBoardFromLocalStorage from "../js/restoreBoardFromLocalStorage";
-import insertAboveTask from "./insertAboveTask";
+import Board from "./Board";
+
+let board = new Board();
 
 window.onload = function () {
-  restoreBoardFromLocalStorage();
+  board.restoreBoardFromLocalStorage();
 };
 
 const columnsContainer = document.querySelector(".board");
 
 columnsContainer.addEventListener("click", (e) => {
-
   const clickTarget = e.target;
-
-
-
   const column = clickTarget.closest(".column");
   const addCardLink = column.querySelector(".add-card-link");
   const columnCardsList = column.querySelector(".column-cards");
@@ -40,7 +36,7 @@ columnsContainer.addEventListener("click", (e) => {
 
         columnCardsList.insertAdjacentHTML("beforeend", cardTemplate);
 
-        updateLocalStorage();
+        board.updateLocalStorage();
 
         textarea.value = "";
         addCardSection.classList.add("visually-hidden");
@@ -60,14 +56,12 @@ columnsContainer.addEventListener("click", (e) => {
       const card = button.closest(".card");
       card.remove();
 
-      updateLocalStorage();
+      board.updateLocalStorage();
     }
   });
 });
 
 let actualElement;
-
-// const body = document.querySelector('body');
 
 columnsContainer.addEventListener("dragstart", (e) => {
   actualElement = e.target;
@@ -80,7 +74,7 @@ columnsContainer.addEventListener("dragstart", (e) => {
     zone.addEventListener("dragover", (e) => {
       e.preventDefault();
 
-      const bottomCard = insertAboveTask(zone, e.clientY);
+      const bottomCard = board.insertAboveTask(zone, e.clientY);
       const curCard = document.querySelector(".is-dragging");
 
       if (!bottomCard) {
@@ -89,7 +83,7 @@ columnsContainer.addEventListener("dragstart", (e) => {
         zone.insertBefore(curCard, bottomCard);
       }
 
-      updateLocalStorage();
+      board.updateLocalStorage();
     });
   });
 });
